@@ -6,7 +6,7 @@
 
 # https://www.python.org
 # https://docs.python.org/release/3.10.11/
-# https://docs.python.org/release/3.8.10/library/
+# https://docs.python.org/release/3.10.11/library/
 
 print("Nothing to be done.")
 
@@ -34,7 +34,7 @@ Nothing to be done.
 
 
 $ ls -l Hello.py
--rw------- 1 fares prof 5354 Jun 5  2022 Hello.py
+-rw------- 1 fares prof 5354 Jun 4  2025 Hello.py
 
 $ chmod ugo+x Hello.py
 
@@ -42,12 +42,12 @@ $ Hello.py
 Nothing to be done.
 
 $ ls -l Hello.py
--rwx--x--x 1 fares prof 5354 Jun 5  2022 Hello.py
+-rwx--x--x 1 fares prof 5354 Jun 4  2025 Hello.py
 
 
 
 $ python3
-Python 3.8.10 (default, Nov 22 2023, 10:22:35)
+Python 3.8.10 (default, Mar 18 2025, 20:04:55)
 [GCC 9.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import Hello
@@ -72,7 +72,7 @@ Nothing to be done.
 
 		
 $ python3
-Python 3.8.10 (default, Nov 22 2023, 10:22:35)
+Python 3.8.10 (default, Mar 18 2025, 20:04:55)
 [GCC 9.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> help()
@@ -187,7 +187,7 @@ has the same effect as typing a particular string at the help> prompt.
 
 
 $ python3
-Python 3.8.10 (default, Nov 22 2023, 10:22:35)
+Python 3.8.10 (default, Mar 18 2025, 20:04:55)
 [GCC 9.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import this
