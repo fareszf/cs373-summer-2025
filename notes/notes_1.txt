@@ -1,0 +1,129 @@
+﻿Software Engineering
+The concept first appeared at a NATO conference in Germany in 1968 to handle a software crisis.
+
+The causes of the software crisis were linked to the overall complexity of hardware
+and the software development process.
+The crisis manifested itself in several ways:
+
+- Projects running over budget
+- Projects running over time
+- Software was very inefficient
+- Software was of low quality
+- Software often did not meet requirements
+- Projects were unmanageable and code was difficult to maintain
+
+Source: https://en.wikipedia.org/wiki/Software_crisis
+
+
+Software Activities (or Processes) vs Software Development Models
+Activities: Required to develop a software system.
+Activities include analysis, design, implementation, verification and validation (testing), and maintenance.
+
+Software Development Model:
+An abstract representation of a process.
+It presents a description of a process from some particular perspective.
+
+Basic development models are:
+
+- Waterfall
+- Incremental
+- Reuse-oriented software development
+Source: Sommerville, Software Engineering, 10th ed., Chapter 2
+
+Definition of Software Engineering
+Software engineering is concerned with theories, methods, and tools for professional software development.
+
+
+Comments in Python:
+# : for one-line comments
+
+''' : for multi-line comments
+
+
+Running main() in Python:
+
+if __name__ == "__main__":
+    main()
+main() is executed only if the file containing main() is run directly, not when imported.
+
+__name__ is an attribute automatically set to "__main__" when the file is executed as a script.
+
+
+Script vs Module:
+- Script: A directly executable piece of code (run by itself).
+- Module: A library, imported by another piece of code.
+
+cProfile:
+
+An optimization tool used to diagnose what makes a program slow.
+
+The output includes total running time, the time of each separate function, and how many times each function is executed.
+
+-m flag:
+
+Allows running a module, like cProfile, as a script.
+
+range():
+
+Returns an object which produces elements on demand.
+
+Three ways to execute Hello.py:
+
+Type in the shell: python Hello.py
+
+Give executable permission and type: ./Hello.py
+
+Run the Python interpreter and type: import Hello
+
+Shebang line (#!):
+
+Example: #!/usr/bin/env python3
+
+Tells the operating system to run the script with Python.
+
+In Unix-like OSes, the loader reads this line to determine which interpreter to use.
+
+Collatz Conjecture
+Process:
+
+Take a positive integer.
+
+If it is even, divide it by 2.
+
+If it is odd, multiply by 3 and add 1.
+
+Repeat until reaching 1.
+
+Example sequence starting from 5:
+5 → 16 → 8 → 4 → 2 → 1
+
+Cycle length of 5: 6 steps
+
+Cycle length of 10: 7 steps
+
+Assertions
+Assertions are valuable computational comments and are invaluable for future code maintainers.
+
+When an assertion fails, it reports:
+
+The filename
+
+The function name
+
+The line number
+
+The expression where the failure occurred
+
+Important points about assertions:
+
+Executing Python with -O turns off all assertions.
+
+Assertions are NOT appropriate for testing code (use unittest instead).
+
+Assertions are NOT appropriate for handling user errors (use exceptions instead).
+
+Assertions are appropriate for detecting programmer errors.
+
+When an assertion fails, the program stops.
+When testing a program, you do not want it to stop — you need to complete all tests.
+Therefore, unit testing is the correct method.
