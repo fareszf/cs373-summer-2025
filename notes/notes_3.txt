@@ -1,0 +1,117 @@
+1. Type Relationships
+---------------------
+issubclass()
+
+
+issubclass(cls, classinfo) -> bool
+
+
+- Returns `True` if cls is a subclass of classinfo or the same class itself.
+- Raises `TypeError` if cls or classinfo is not a class or a tuple of classes.
+
+Example::
+
+    >>> class A: pass
+    >>> class B(A): pass
+    >>> issubclass(B, A)
+    True
+    >>> issubclass(A, A)
+    True
+
+
+2. Range Objects
+----------------
+`range()` produces an immutable, lazy sequence of integers.
+
+Signatures:
+
+
+range(stop)
+range(start, stop[, step])
+
+
+- start – first integer (default `0`)
+- stop – *exclusive* upper bound
+- step – increment (default `1`)
+
+Why lazy? A `range` stores only `start`, `stop`, and `step`, so it is memory‑efficient.
+
+Examples::
+
+    >>> list(range(5))
+    [0, 1, 2, 3, 4]
+    >>> list(range(3, 6))
+    [3, 4, 5]
+    >>> list(range(4, 10, 2))
+    [4, 6, 8]
+    >>> list(range(4, 4))
+    []
+
+3. Lists vs. Tuples
+-------------------
+| Feature        | `list`             | `tuple`                           |
+| -------------- | ------------------ | ------------------                |
+| Literal syntax | `[ ]`              | `( )` (trailing comma for 1‑item) |
+| Mutability     | **Mutable**        | **Immutable**                     |
+| Methods        | Many (`append`, …) | Few (`count`, `index`)            |
+| Performance    | Slower creation    | Faster creation, hashable         |
+
+Singleton literal pitfall::
+
+    >>> type((2))     # int, not tuple
+    <class 'int'>
+    >>> type((2,))    # tuple of length 1
+    <class 'tuple'>
+
+Mutability demo
+
+
+a = [2, 3, 4]
+t = (5, a, 6.7)
+
+a[0] = 99      # OK – list is mutable
+# t[0] = 10    # TypeError – tuple immutable
+
+print(t)       # (5, [99, 3, 4], 6.7)
+
+
+4. Mutable & Immutable Built‑ins
+--------------------------------
+- Mutable  : `list`, `dict`, `set`
+- Immutable: `tuple`, `frozenset`, `str`, `bytes`, `int`, `float`, `bool`
+
+5. Exception Handling
+---------------------
+try:
+    # risky code
+except <ExceptionType> as e:
+    # recovery / logging
+else:
+    # executed only if no exception occurs
+finally:
+    # always runs (cleanup)
+
+
+Raising manually:
+
+
+if denominator == 0:
+    raise ZeroDivisionError("Cannot divide by zero")
+
+6. Operators & Precedence
+-------------------------
+- Boolean: `and`, `or`, `not`
+- Bitwise: `~`, `&`, `|`, `^`, `<<`, `>>` (operate on ints)
+
+Comprehensive precedence chart: https://www.programiz.com/python-programming/precedence-associativity
+
+Power‑of‑two trick
+
+def is_power_of_two(n: int) -> bool:
+    return n > 0 and (n & (n - 1)) == 0
+
+Proof::
+
+    n       : 1000 (8)
+    n - 1   : 0111 (7)
+    n & n-1 : 0000  ➜ zero ⇒ power of two
