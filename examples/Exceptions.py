@@ -6,28 +6,30 @@
 
 # https://docs.python.org/3.8/library/exceptions.html
 
-def f (b) :
-    if b :
+def f(b):
+    if b:
         raise NameError("abc")
     return 0
 
 print("Exceptions.py")
 
-try :
+try:
     assert f(False) == 0
-except NameError :
+except NameError:
     assert False
 
-try :
+expected_args = ("abc",)  
+
+try:
     assert f(True) == 1
     assert False
-except NameError as e :
-    assert isinstance(e,      NameError)
+except NameError as e:
+    assert isinstance(e, NameError)
     assert isinstance(e.args, tuple)
-    assert len(e.args)  ==     1
-    assert e.args       is not ("abc",)
-    assert e.args       ==     ("abc",)
-else :
+    assert len(e.args) == 1
+    assert e.args is not expected_args  
+    assert e.args == expected_args
+else:
     assert False
 
 assert isinstance(NameError, type)
