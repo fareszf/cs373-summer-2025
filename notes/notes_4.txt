@@ -1,0 +1,139 @@
++ vs += 
+-------
+`a += b` is the same as `a = a + b` only if `a` and `b` are immutable. Otherwise, `+` returns a newly allocated object, while `+=` modifies the object in place.
+
+- `+` always returns a newly allocated object.
+- `+=` should (but doesn’t have to) modify the object in place if it’s mutable.
+
+Example:
+----------
+>>> x = 10
+>>> id(x)
+1582465424
+>>> x += 1
+>>> id(x)
+1582465456
+
+>>> x = 10
+>>> id(x)
+1582465424
+>>> x = x + 1
+>>> id(x)
+1582465456
+
+>>> x = [2, 3]
+>>> id(x)
+2194172870024
+>>> x += [1]
+>>> x
+[2, 3, 1]
+>>> id(x)
+2194172870024
+
+>>> x = [2, 3]
+>>> id(x)
+2194172879624
+>>> x = x + [1]
+>>> x
+[2, 3, 1]
+>>> id(x)
+2194172879560
+
+List Operations:
+- `list += list` or `tuple`
+- `list + list`
+----------------------------------
+
+Factorial.py and FactorialT.py
+Factorial.py:
+factorial_recursion
+• Perform recursive calls first, then take the return value of the recursive call and calculate the result. The result won't be calculated until you have returned from every recursive call.
+• You need to keep stack frames until the recursion is over—O(n) space.
+
+factorial_tail_recursion
+• Note that a function inside a function is allowed in Python.
+• Perform your calculations first and then execute the recursive call, passing the results of the current step to the next recursive step.
+• We are reusing the current stack frame, so we will never get a stack overflow.
+• Some compilers transfer tail recursive functions into a loop (but not in Python).
+• The procedure is recursive, but the process is not.
+
+FactorialT.py:
+With self.subTest(): If one of the tests fails, this would be the end of test_0. with keeps the test going until it goes through all.
+
+timeit:
+• The timeit function takes three arguments.
+• f.__name__ obtains the name of the current function, and "(100)" is the argument to the function.
+• "from __main__ import " + f.__name__ imports the definition of the function.
+• number = 1000 determines how many times we are going to run the function.
+• The result, t, is printed after multiplying it by 1000 because timeit provides results in microseconds, and we need it in milliseconds.
+
+
+Reduce.py:
+---------
+reduce:
+------
+- reduce is a higher order function. it takes a function 
+  as one of its arguments.
+- mul is a function from a module called operator. 
+  You can think of it as a wrapper for the operator '*'.
+- reduce(binary_function, sequence_of_elements[, Seed: base_case_if_seq_is_empty)]
+
+- Note that the initialization is optional. If it's present, 
+  it will be placed before the items of the iterable in the calculations. 
+  if it's not, and the iterable contains one item, it will return this one item.
+
+  reduce_for_range (bf, a, v) demands a be indexable.
+  reduce_for (bf, a, v) does NOT demand a to be indexable. It should only be iterable.
+ 
+  reduce(add,[],0] #0
+  reduce(add,[])
+  error: no initial value
+
+  e.g., reduce(mul, range(1, 4), 1)
+  1*1*2*3
+  e.g., reduce(add, range(1,5), 1) = 1 + 1 + 2 + 3 + 4 
+
+  write the function reduce: reduce(bf, iterable, seed) 
+
+
+- reduce_for_range (bf, a, v) :
+  demands "a" to be indexable
+
+- reduce_for (bf, a, v) :
+  demands "a" to be an iterable
+
+- reduce_while (bf, a, v) :
+  receives an iterable and generates an iterator
+--------------------------------------------------
+
+Iterators
+# Creating a list
+lst = [1, 2, 3]
+
+# Listing a list multiple times yields the same result,
+# because a list is an iterable—not an iterator—and is not exhaustible
+print(list(lst))  # [1, 2, 3]
+print(list(lst))  # [1, 2, 3]
+
+# Creating an iterator from the list
+iter_lst = iter(lst)
+
+# Converting the iterator to a list (consumes the iterator)
+print(list(iter_lst))  # [1, 2, 3]
+
+# Iterator is now exhausted, so this returns an empty list
+print(list(iter_lst))  # []
+
+# Resetting the iterator
+iter_lst = iter(lst)
+
+# Iterating manually with next()
+print(next(iter_lst))  # 1
+print(next(iter_lst))  # 2
+print(next(iter_lst))  # 3
+
+# Attempting to go beyond the iterator
+try:
+    print(next(iter_lst))  # Raises StopIteration
+except StopIteration:
+    print("StopIteration raised - no more items in iterator.")
