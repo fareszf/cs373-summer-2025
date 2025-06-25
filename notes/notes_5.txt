@@ -1,0 +1,135 @@
+Introduction to Iterables, Iterators, and Generators in Python
+-------------------------------------------------------------
+
+Iterables
+- An iterable is an object that you can iterate through using a loop.
+- Most iterables implement the "__getitem__" or "__iter__" method.
+
+Example:
+    >>> x = [2, 3, 4]
+    >>> hasattr(x, "__iter__")
+    True
+    >>> hasattr(x, "__getitem__")
+    True
+    >>> hasattr(x, "__next__")
+    False  # Not an iterator
+
+Iterators
+- An iterator is an object with both "__iter__" and "__next__" methods.
+- You can convert an iterable to an iterator using iter().
+
+Example:
+    >>> x = [2, 3, 4]
+    >>> p = iter(x)
+    >>> next(p)
+    2
+    >>> next(p)
+    3
+    >>> next(p)
+    4
+    >>> next(p)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    StopIteration
+
+Generators
+
+Generator Functions
+- Defined using the 'yield' keyword.
+- Yield pauses function execution and resumes from where it left off.
+- Every generator is an iterator.
+
+Example:
+    def f():
+        print("abc")
+        yield 5
+        print("def")
+        yield 6
+        print("ghi")
+
+Usage:
+    >>> v = f()
+    >>> print(v)
+    <generator object f at ...>
+    >>> next(v)
+    abc
+    5
+    >>> next(v)
+    def
+    6
+    >>> next(v)
+    ghi
+    Traceback (most recent call last):
+    StopIteration
+
+Another Generator Example
+    def yrange(n):
+        i = 0
+        while i < n:
+            yield i
+            i += 1
+
+    >>> list(yrange(3))
+    [0, 1, 2]
+
+Notes on Iterables
+
+1. `len(x)` works on lists but not on iterators:
+    >>> b = iter([1, 2, 3])
+    >>> len(b)
+    TypeError: object of type 'list_iterator' has no len()
+
+2. Testing if an iterator is empty with `== []` does not work:
+    >>> x = iter([])
+    >>> if x == []:
+    ...     print("Empty")
+    ... else:
+    ...     print("Full")
+    Full
+
+3. `list(iterable) == []` works on all finite iterables, 
+   but not on infinite iterators like `itertools.count()`.
+
+Comprehensions.py
+-----------------
+Lambda Functions
+
+- A lambda is an anonymous (unnamed) function written in a single expression.
+- Syntax: lambda arguments: expression
+
+Example:
+    >>> f = lambda x, y, z: x + y + z
+    >>> f(1, 2, 3)
+    6
+
+zip()
+
+- zip() combines two iterables into a tuple iterator.
+
+Example:
+    >>> a = [1, 2, 3, 4]
+    >>> b = ['a', 'b', 'c', 'd']
+    >>> c = zip(a, b)
+    >>> list(c)
+    [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd')]
+    >>> list(c)
+    []  # Exhausted iterator
+
+
+filter(predicate, list_of_inputs)
+filter is a generator takes a predicate, it applies the predicate 
+on the given iterable returns the element that satisfies the predicate.
+It's an iterator, i.e., it returns itself.
+
+
+"|=" union of sets
+
+Lines 174: all() # all(iterable): Return True if all elements of the iterable are true (or if the iterable is empty).
+A(): instance of a class
+True
+...
+all([]) = True
+
+Lines 186: any() # any(iterable): Return True if any element of the iterable is true. If the iterable is empty, return False.
+any([]) = False
+https://docs.python.org/3.5/library/functions.html#all
