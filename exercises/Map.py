@@ -14,13 +14,13 @@ def map_for (uf, a) :
     for v in a :
         yield uf(v)
 
-def map_while (uf, a) :
+def map_while(uf, a):
     p = iter(a)
-    try:
-       while True : 
-           yield uf(next(p))
-    except StopIteration:
-       return
+    while True:
+        try:
+            yield uf(next(p))
+        except StopIteration:
+            break  
        	
 def map_generator (uf, a) :
     return (uf(v) for v in a)

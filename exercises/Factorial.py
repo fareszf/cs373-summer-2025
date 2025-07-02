@@ -19,6 +19,7 @@ def factorial_recursion (n) :
 
 # recursive procedure
 # linear iterative process
+# Note: Python does not optimize tail recursion
 def factorial_tail_recursion (n) :
     assert n >= 0
     def f (n, v) :

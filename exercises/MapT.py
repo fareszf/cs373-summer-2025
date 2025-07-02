@@ -71,7 +71,7 @@ class MyUnitTests (TestCase) :
 if __name__ == "__main__" :
     main()
 
-""" #pragma: no cover
+r""" #pragma: no cover
 % MapT
 ....
 
