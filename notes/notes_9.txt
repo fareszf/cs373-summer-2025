@@ -1,0 +1,92 @@
+# Decorators in Python
+# ====================
+
+# A decorator is a function that:
+# - Takes another function as an argument
+# - Adds some kind of functionality
+# - Returns a new function
+# - WITHOUT modifying the original function’s source code
+
+# -------------------------------------------------------
+# Basic Example of a Decorator
+# -------------------------------------------------------
+
+def decorator_function(original_function):
+    def wrapper_function():
+        print('wrapper executed this before display')
+        return original_function()
+    return wrapper_function
+
+@decorator_function  # Equivalent to: display = decorator_function(display)
+def display():
+    print('display function ran')
+
+display()
+
+# Output:
+# wrapper executed this before display
+# display function ran
+
+# -------------------------------------------------------
+# Note:
+# When stacking decorators, the one closest to the function (lower one) is executed first.
+
+# -------------------------------------------------------
+# Why Use Decorators?
+# -------------------------------------------------------
+# Decorators help us:
+# - Add functionality to existing functions
+# - Without changing the original function code
+# - By wrapping them inside another function
+
+# -------------------------------------------------------
+# Functional Decorator Example
+# -------------------------------------------------------
+
+def post_gtz(f):
+    def g(n):
+        v = f(n)
+        assert v > 0
+        return v
+    return g
+
+# Explanation:
+# - post_gtz is a decorator.
+# - It wraps a function f with a new function g.
+# - g calls f(n), checks if the result is greater than 0, then returns it.
+# - g is the new "wrapped" function with added behavior.
+
+# -------------------------------------------------------
+# Decorator with Caching (cache_1 and cache_2)
+# -------------------------------------------------------
+
+# In the file DecoratorsT.py:
+# - There are test cases that build a cache to store results (cycle lengths).
+# - cache_1 is a decorator that takes a function f and returns a function g.
+# - g wraps f and uses a dictionary `d` as a cache.
+
+# Key Notes:
+# - Each time cache_1(f) is called, a new dictionary `d` and function `g` are created.
+# - This means that `g` has a unique cache for its lifecycle.
+# - `g` becomes a cached version of `f`.
+
+# Example structure (not full code):
+def cache_1(f):
+    d = {}  # cache dictionary
+
+    def g(n):
+        if n in d:
+            return d[n]
+        v = f(n)
+        d[n] = v
+        return v
+
+    return g
+
+# -------------------------------------------------------
+# Summary:
+# - Decorators are a powerful tool for modifying function behavior.
+# - They enable reusable, clean enhancements (e.g., logging, caching, validation).
+# - Syntax: use "@" or manually assign: f = decorator(f)
+
+# End of Notes

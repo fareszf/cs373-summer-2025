@@ -1,0 +1,133 @@
+# Python Function Arguments, Defaults, and Unpacking
+# ===================================================
+
+# FunctionKeywords.py
+# -------------------
+
+# Note 1:
+# Named (keyword) arguments must match parameter names in the function signature.
+
+# Note 2:
+# When mixing positional and named arguments in a function call:
+# - Positional arguments must come first.
+# - Named arguments can follow in any order.
+
+# ---------------------------------------------------
+
+# FunctionDefaults.py
+# -------------------
+
+# Rule:
+# In a function definition, non-default parameters cannot follow default ones.
+
+# Example: INVALID
+# def example(a=1, b):  # Error
+#     pass
+
+# Lines 35–39: Function h1
+def h1(x=[]):
+    x.append(2)
+    return x
+
+# Line 35: h1() → uses default [], adds 2 → [2]
+# Line 36: h1() again → adds 2 → [2, 2]
+# Line 37: h1([10, 20]) → adds 2 → [10, 20, 2]
+# Line 38: h1() → adds 2 → [2, 2, 2]
+# Line 39: h1([1]) → adds 2 → [1, 2]
+
+# Problem: Default list is created once and reused
+
+# Lines 43–45: Function h2 — using tuple (immutable)
+def h2(x=()):
+    x = x + (2,)
+    return x
+
+# Lines 47–51:
+# h2() → (2,)
+# h2() again → still (2,)
+# Safe because tuple is immutable
+
+# Recommendation:
+# Do not use mutable types like lists as default values.
+
+# Alternative: Use None
+# Lines 55–59: Function h3
+def h3(x=None):
+    if x is None:
+        x = []
+    x.append(2)
+    return x
+
+# Lines 61–66:
+# h3() → [2]
+# h3() again → [2]
+# New list is created each time
+
+# Difference from h1:
+# - h1 uses a shared default list
+# - h3 creates a new list inside the function
+
+# ---------------------------------------------------
+
+# FunctionUnpacking.py
+# ---------------------
+
+# Rules when calling a function:
+# - Positional arguments must come first
+# - Then named arguments
+# - Then unpacked iterables (*args) or dictionaries (**kwargs)
+
+def f(x, y, z):
+    return [x, y, z]
+
+t = (3, 4)
+
+assert f(z=2, *t) == [3, 4, 2]
+assert f(*t, z=2) == [3, 4, 2]
+# assert f(*t, x=2)  # Error: multiple values for 'x'
+
+assert f(2, *t) == [2, 3, 4]
+# assert f(*t, 2)  # SyntaxError: positional must come first
+
+# ---------------------------------------------------
+
+# FunctionTuple.py
+# ----------------
+
+# *t as an argument (call) → unpacking
+# *t as a parameter (definition) → packing
+
+def pack_example(*args):  # packs into a tuple
+    return args
+
+print(pack_example(1, 2, 3))  # → (1, 2, 3)
+
+# ---------------------------------------------------
+
+# FunctionDict.py
+# ----------------
+
+# **d as an argument (call) → unpacking
+# **d as a parameter (definition) → packing
+
+def pack_keywords(**kwargs):  # packs into a dictionary
+    return kwargs
+
+print(pack_keywords(a=1, b=2))  # → {'a': 1, 'b': 2}
+
+# ---------------------------------------------------
+
+# Summary of Ordering Rules
+# -------------------------
+
+# Syntax Rules:
+# - Positional → Named → *args → **kwargs
+
+# Semantic Rules:
+# - {Positional, *args}, then Named, then **kwargs
+
+# Always keep positional arguments first
+# Unpack iterables before unpacking dictionaries
+# Be cautious of name conflicts when unpacking
+
+# End of Notes

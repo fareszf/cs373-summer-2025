@@ -1,0 +1,148 @@
+PYTHON ITERABLES AND ITERATORS
+==============================
+
+1. ITERABLES
+------------
+
+- A Python object is called *iterable* if it implements the special method __iter__().
+- Common iterable types: list, tuple, string, dict, set, range, etc.
+- The built-in function iter(obj) calls obj.__iter__() and returns an iterator.
+
+Example:
+    x = range(4)
+    hasattr(x, "__iter__")  -> True
+    hasattr(x, "__next__")  -> False
+
+
+2. ITERATORS
+------------
+
+- A Python object is called *iterator* if it implements both:
+    __iter__()    --> returns self
+    __next__()    --> returns the next item or raises StopIteration
+
+Example:
+    x = iter([1, 2, 3])
+    next(x)   # returns 1
+
+- All iterators are also iterables, but not all iterables are iterators.
+
+
+3. RANGE IMPLEMENTATIONS
+-------------------------
+
+A. Range and RangeIteratorT
+----------------------------
+
+- RangeIteratorT includes:
+    - range_iterator_class (class-based)
+    - range_iterator_function (function-based)
+
+- A function-based iterator is exhausted after one use.
+- Class-based iterators allow re-iteration via __iter__(), so list(obj) can be called multiple times.
+
+
+B. RangeT
+---------
+
+- RangeT uses:
+    - range_1
+    - range_2
+
+- In lines 50-51, list() is called twice on the same object,
+  showing that it must return a new iterator each time.
+- This is only possible with a class-based implementation (not with a generator function).
+
+
+C. Range_2 (Class)
+------------------
+
+- Objective: make a *non-exhaustible* iterable (like built-in range).
+- Solution: do not update instance variables b and e.
+
+Example:
+    def __iter__(self):
+        b, e = self.b, self.e  # use local copies
+        while b < e:
+            yield b
+            b += 1
+
+- This way, list(x) always gives the same output.
+
+
+D. Range_1 (Class with Inner Class)
+-----------------------------------
+
+- Uses an inner class to define the iterator behavior.
+- The outer class (Range_1) is the iterable.
+- Inner class implements __next__() and __iter__().
+
+Example:
+    class Range_1:
+        def __init__(self, b, e):
+            self.b = b
+            self.e = e
+
+        class RangeIterator:
+            def __init__(self, b, e):
+                self.cur = b
+                self.end = e
+
+            def __iter__(self):
+                return self
+
+            def __next__(self):
+                if self.cur >= self.end:
+                    raise StopIteration
+                val = self.cur
+                self.cur += 1
+                return val
+
+        def __iter__(self):
+            return Range_1.RangeIterator(self.b, self.e)
+
+
+4. USER-DEFINED ITERABLE TRUTHINESS
+------------------------------------
+
+- Using `if x` does NOT work as expected for user-defined iterables
+  unless __bool__() or __len__() is defined.
+
+Example:
+    class iterable:
+        def __iter__(self):
+            return iter([])
+
+    x = iterable()
+    if x:
+        print("full")   # prints "full" even though it's logically empty
+
+
+5. CUSTOM LOOP FUNCTIONS
+-------------------------
+
+def a_for(x):
+    for a in x:
+        print("inside for")
+
+def a_while(x):
+    p = iter(x)
+    try:
+        while True:
+            w = next(p)
+            print("inside while")
+    except StopIteration:
+        pass
+
+
+6. SUMMARY
+----------
+
+- Iterables: define __iter__(), return an iterator
+- Iterators: define both __iter__() and __next__()
+- Use classes for non-exhaustible iteration
+- Be cautious using `if` on custom iterable objects
+
+
+
+
