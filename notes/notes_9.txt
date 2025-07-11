@@ -50,43 +50,89 @@ def post_gtz(f):
         return v
     return g
 
+# ---------------------------------------
 # Explanation:
-# - post_gtz is a decorator.
-# - It wraps a function f with a new function g.
-# - g calls f(n), checks if the result is greater than 0, then returns it.
-# - g is the new "wrapped" function with added behavior.
+#
+# post_gtz is a higher-order function.
+# It takes a function 'f' and returns a new function 'g'.
+#
+# The returned function 'g' does the following:
+# - Calls 'f(n)' and stores the result in 'v'
+# - Asserts that 'v' is greater than 0
+# - Returns 'v'
+#
+# Think of 'g' as a wrapper around 'f' that adds
+# a postcondition: the result of f(n) must be > 0.
+#
+# If the condition fails, an AssertionError is raised.
+#
+# This pattern is useful for enforcing constraints on
+# function outputs without modifying the original function.
+# ---------------------------------------
 
 # -------------------------------------------------------
 # Decorator with Caching (cache_1 and cache_2)
 # -------------------------------------------------------
 
-# In the file DecoratorsT.py:
-# - There are test cases that build a cache to store results (cycle lengths).
-# - cache_1 is a decorator that takes a function f and returns a function g.
-# - g wraps f and uses a dictionary `d` as a cache.
+cache_1 and cache_2
+--------------------
 
-# Key Notes:
-# - Each time cache_1(f) is called, a new dictionary `d` and function `g` are created.
-# - This means that `g` has a unique cache for its lifecycle.
-# - `g` becomes a cached version of `f`.
+DecoratorsT.py contains test cases demonstrating how to build a cache
+to store cycle lengths (or any function outputs).
 
-# Example structure (not full code):
+There are two cache implementations:
+
+1. cache_1: A function-based decorator
+2. cache_2: A class-based callable object
+
+--------------------
+cache_1
+--------------------
+
+cache_1 receives a function `f` and returns a new function `g`.  
+It uses a dictionary `d` to store results (the cache).
+
+Every time `cache_1(f)` is called:
+- A new dictionary `d` is created.
+- A new function `g` is created.
+- This `g` acts as a wrapper around `f` and maintains its own private cache.
+
+Example implementation:
+
 def cache_1(f):
-    d = {}  # cache dictionary
-
+    d = {}
     def g(n):
-        if n in d:
-            return d[n]
-        v = f(n)
-        d[n] = v
-        return v
-
+        if n not in d:
+            d[n] = f(n)
+        return d[n]
     return g
 
-# -------------------------------------------------------
-# Summary:
-# - Decorators are a powerful tool for modifying function behavior.
-# - They enable reusable, clean enhancements (e.g., logging, caching, validation).
-# - Syntax: use "@" or manually assign: f = decorator(f)
+--------------------
+cache_2
+--------------------
 
-# End of Notes
+cache_2 is a class-based alternative.  
+It stores both the original function (`self.f`) and a shared cache (`self.d`) in the instance.
+
+The special method `__call__` makes instances of cache_2 behave like functions.
+
+Example implementation:
+
+class cache_2:
+    def __init__(self, f):
+        self.f = f
+        self.d = {}
+
+    def __call__(self, n):
+        if n not in self.d:
+            self.d[n] = self.f(n)
+        return self.d[n]
+
+--------------------
+Notes:
+--------------------
+- Both versions cache the result of `f(n)` the first time `n` is passed.
+- On future calls with the same `n`, they return the cached result instead of recomputing it.
+- `cache_1` provides one cache per decoration.
+- `cache_2` provides a reusable cache object that persists across calls.
+
