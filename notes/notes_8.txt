@@ -194,7 +194,9 @@ print(pack_keywords(a=1, b=2))  # → {'a': 1, 'b': 2}
 # -------------------------
 
 # Syntax Rules:
-# - Positional → Named → *args → **kwargs
+# - Positional → Named 
+# - Positional → **kwargs
+# - *args → **kwargs
 
 # Semantic Rules:
 # - {Positional, *args}, then Named, then **kwargs
