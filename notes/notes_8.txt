@@ -190,7 +190,7 @@ print(pack_keywords(a=1, b=2))  # → {'a': 1, 'b': 2}
 
 # ---------------------------------------------------
 
-# Summary of Ordering Rules
+# Summary of Argument Ordering and Evaluation Rules in Function Calls
 # -------------------------
 
 # Syntax Rules:
