@@ -24,49 +24,122 @@
 # def example(a=1, b):  # Error
 #     pass
 
-# Lines 35–39: Function h1
-def h1(x=[]):
-    x.append(2)
+# Function with mutable default argument
+def h1(x = []):  # x defaults to an empty list, which is shared across calls!
+    x += [2]     # Adds 2 to the list (in-place)
     return x
 
-# Line 35: h1() → uses default [], adds 2 → [2]
-# Line 36: h1() again → adds 2 → [2, 2]
-# Line 37: h1([10, 20]) → adds 2 → [10, 20, 2]
-# Line 38: h1() → adds 2 → [2, 2, 2]
-# Line 39: h1([1]) → adds 2 → [1, 2]
+# --------------------------------------
+# Lines 35–39: Test different calls to h1
+# --------------------------------------
+
+# Line 35
+assert h1() == [2]
+# - First call with no argument
+# - Default list x = []
+# - Adds 2 → [2]
+# - Returns [2]
+
+# Line 36
+assert h1() == [2, 2]
+# - Calls with no argument again
+# - Reuses the same default list from before: [2]
+# - Adds another 2 → [2, 2]
+# - Returns [2, 2]
+
+# Line 37
+assert h1([1]) == [1, 2]
+# - Explicitly passes in [1]
+# - Does NOT use the default list
+# - Adds 2 → [1, 2]
+# - Returns [1, 2]
+
+# Line 38
+assert h1() == [2, 2, 2]
+# - Again uses the shared default list
+# - Current value of default x is [2, 2]
+# - Adds another 2 → [2, 2, 2]
+# - Returns [2, 2, 2]
+
+# Line 39
+assert h1([1]) == [1, 2]
+# - Again passes a new list [1]
+# - Adds 2 → [1, 2]
+# - Returns [1, 2]
 
 # Problem: Default list is created once and reused
 
-# Lines 43–45: Function h2 — using tuple (immutable)
-def h2(x=()):
-    x = x + (2,)
+# Lines 43–45: Define the function h2 with an immutable default (empty tuple)
+
+def h2(x = ()):  # immutable default argument (tuple)
+    x += (2,)    # creates a new tuple by appending 2
     return x
 
-# Lines 47–51:
-# h2() → (2,)
-# h2() again → still (2,)
-# Safe because tuple is immutable
+# ---------------------------------------
+# Lines 47–51: Test different calls to h2
+# ---------------------------------------
 
+# Line 47
+assert h2() == (2,)
+# - Called with no argument
+# - x defaults to ()
+# - Adds 2 → new tuple: (2,)
+# - Returns (2,)
+
+# Line 48
+assert h2() == (2,)
+# - Called again with no argument
+# - x again defaults to ()
+# - No shared state → new tuple: (2,)
+# - Returns (2,)
+
+# Line 49
+assert h2((1,)) == (1, 2)
+# - Passes in tuple (1,)
+# - Adds 2 → (1, 2)
+# - Returns (1, 2)
+
+# Line 50
+assert h2() == (2,)
+# - Still no argument
+# - Returns a fresh (2,) again
+
+# Line 51
+assert h2((1,)) == (1, 2)
+# - Same as before
+# - Clean and predictable output
+
+# ---------------------------------------
 # Recommendation:
-# Do not use mutable types like lists as default values.
+# ---------------------------------------
+# Use immutable types (like tuples) as default values.
+# Avoid mutable defaults like lists or dictionaries.
+#    They retain changes between function calls.
 
 # Alternative: Use None
-# Lines 55–59: Function h3
-def h3(x=None):
+# h3: Safe use of mutable default via None
+# Lines 55–59
+
+def h3(x = None):
     if x is None:
         x = []
-    x.append(2)
+    x += [2]
     return x
 
-# Lines 61–66:
-# h3() → [2]
-# h3() again → [2]
-# New list is created each time
+# Lines 61–66: Test calls
 
-# Difference from h1:
-# - h1 uses a shared default list
-# - h3 creates a new list inside the function
+assert h3()     == [2]
+assert h3()     == [2]
+assert h3([1])  == [1, 2]
+assert h3()     == [2]
+assert h3([1])  == [1, 2]
+assert h3(None) == [2]
 
+# Summary:
+# - h3() returns [2] each time when called without args.
+# - A new list is created on each call (x = [] inside).
+# - Contrast with h1(): reused the same list.
+# - Recommended: use x=None for mutable defaults.
 # ---------------------------------------------------
 
 # FunctionUnpacking.py
