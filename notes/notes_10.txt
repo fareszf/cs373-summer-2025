@@ -1,0 +1,42 @@
+Lambdas:
+--------
+>>> def make_inc_b(j):
+...     return lambda i: i + j
+...
+>>> x = make_inc_b(1)(2)
+>>> x
+3
+
+>>> def make_inc_b(j, k):
+...     return lambda i: i + j + k
+...
+>>> x = make_inc_b(1, 2)(2)
+>>> x
+5
+
+>>> def make_inc_b(j):
+...     return lambda i, k: i + k + j
+...
+>>> x = make_inc_b(1)(2, 3)
+>>> x
+6
+
+Functions.py
+------------
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+    def greet(self):
+        print(f"Hello, my name is {self.name}")
+
+p = Person("Alice")
+p.greet()  # Behind the scenes, Python translates this to: Person.greet(p)
+
+
+Person.greet(p)  # Works the same as p.greet()
+
+
+Functions.py reference:
+https://www.programiz.com/article/python-self-why
+--------------------------
