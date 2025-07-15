@@ -36,6 +36,21 @@ p.greet()  # Behind the scenes, Python translates this to: Person.greet(p)
 
 Person.greet(p)  # Works the same as p.greet()
 
+__call__:
+---------
+class Greeter:
+    def __init__(self, name):
+        self.name = name
+
+    def __call__(self):
+        print(f"Hello from {self.name}!")
+
+g = Greeter("Alice")
+
+# Call like a function!
+g()  # Internally this runs: g.__call__()
+
+# So the object behaves like a function in addition to being a class instance.
 
 Functions.py reference:
 https://www.programiz.com/article/python-self-why
