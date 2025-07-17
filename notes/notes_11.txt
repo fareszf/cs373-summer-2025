@@ -1,0 +1,203 @@
+Algebra:
+    - Elements or members
+    - Operations
+
+Integers:
+    +, *, -, /
+
+Algebras can be open or closed.
+
+Examples:
+- Integers under addition: closed → Yes
+- Subtraction: closed → Yes
+- Multiplication: closed → Yes
+- Division: closed → No
+
+Relational Algebra:
+    - Elements or members: relations (tables)
+    - Operations: select, project, various kinds of join
+
+Everything is closed under relational algebra.
+
+Example Relation (or Table) — Movie:
+
+| Title     | Year | Genre   | Director        |
+|-----------|------|---------|-----------------|
+| Star Wars | 2002 | Action  | George Lucas    |
+| Shane     | 1949 | Western | George Stevens  |
+
+Problem: Redundancy in director names.  
+Solution: Normalize by creating a separate director relation.
+
+Director Relation:
+
+| ID | Name             |
+|----|------------------|
+| 1  | George Lucas     |
+| 2  | George Stevens   |
+
+Revised Movie Relation:
+
+| Title     | Year | Genre   | Director ID |
+|-----------|------|---------|-------------|
+| Shane     | 1949 | Western | 2           |
+| Star Wars | 1977 | Western | 1           |
+
+Data Representation in Python:
+We need a structure to represent table elements. Tuples can be used, e.g.,
+
+movies = [(_, _, _, _), (_, _, _, _)]  # lacks metadata
+Better approach: list of dictionaries with metadata
+
+
+movies = [
+    {"name": "shane", "year": 1949, "genre": "western", "director": "george stevens"},
+    {"name": "star wars", "year": 1977, "genre": "western", "director": "george lucas"}
+]
+
+Select Function
+select(relation, unary_predicate) → relation
+The predicate is applied to each tuple; only those for which the predicate returns True are included.
+
+Option 1: Lambda
+select(movies, lambda d: d["year"] > 1955)
+Goes through list of dicts, invokes the lambda on each, and returns those matching the condition.
+
+Option 2: Function
+def foo(d):  # receives a dict
+    return d["year"] > 1949
+
+select(movies, foo)
+What select needs as a second argument is a callable (function or lambda).
+
+------------------------------
+Exercises:
+
+(1) Build select (three ways: yield, list comprehension, filter)
+
+# Using yield
+def select(r, up):
+    for d in r:
+        if up(d):
+            yield d
+
+# Using list comprehension (returns generator)
+def select(r, up):
+    return (d for d in r if up(d))
+
+# Using filter
+def select(r, up):
+    return filter(up, r)
+
+--------------------------------------------------
+
+(2) Build project
+
+Another operation is project.
+
+movies = [
+    {"name": "shane", "year": 1949, "genre": "western", "director": "george stevens"},
+    {"name": "star wars", "year": 1977, "genre": "western", "director": "george lucas"}
+]
+
+# Example: select a subset of columns (year, name, genre)
+project(movies, "year", "name", "genre")
+
+def project(r, *t):
+    # Implementation idea: return list of dictionaries keeping only specified keys
+    ...
+
+--------------------------------------------------
+
+(3) Build CrossJoin
+
+CrossJoin(r, s):  
+- Combines the first row of r with all rows of s,  
+  the second row of r with all rows of s, and so on.
+
+Note: 
+The dict constructor can be used to merge dictionaries:
+    d3 = dict(d1, **d2)
+
+Caveats:
+(1) You can use literal keys: d = {1: 'one', 2: 'two'}  
+    But you **cannot** use: dict(1='one') ← SyntaxError
+
+(2) If d1 and d2 share keys, the values from **d2** will be kept.
+
+(3) Using dict(d1, **d2) fails when d1 or d2 have non-string keys.
+
+# Example (error):
+>>> d1 = {1: "one", 2: "two"}
+>>> d2 = {3: "Three", 4: "Four"}
+>>> dict(d1, **d2)
+TypeError: keyword arguments must be strings
+
+# Example (works):
+>>> d1 = {"1": "one", "2": "two"}
+>>> d2 = {"3": "Three", "4": "Four"}
+>>> dict(d1, **d2)
+{'1': 'one', '2': 'two', '3': 'Three', '4': 'Four'}
+
+--------------------------------------------------
+
+(4) Build ThetaJoin
+
+ThetaJoin joins corresponding rows that satisfy a condition.
+
+Example:
+- r has 3 rows
+- s has 4 rows
+- Condition: lambda u, v: u["A"] == v["C"]
+
+Explanation:
+- u: row from r
+- v: row from s
+- u["A"]: value of attribute A in row u
+- v["C"]: value of attribute C in row v
+
+--------------------------------------------------
+
+(5) Build NaturalJoin
+
+NaturalJoin matches rows from two relations when all common attributes have the same values.
+
+Example:
+
+r = [
+    {"A": 1, "B": 4, "C": 7},
+    {"A": 2, "B": 5, "C": 8},
+    {"A": 3, "B": 6, "C": 9}
+]
+
+s = [
+    {"A": 2, "B": 4, "D": 7},
+    {"A": 3, "B": 5, "D": 5},
+    {"A": 3, "B": 6, "D": 6},
+    {"A": 4, "B": 7, "D": 6}
+]
+
+NaturalJoin(r, s) → [{'A': 3, 'B': 6, 'C': 9, 'D': 6}]
+# Because row 3 of r and row 3 of s have equal values on attributes A and B
+
+Function:
+def naturaljoin(r, s):
+    ...
+
+Notes:
+(1) If there are **no common attributes**, naturaljoin performs a cross join.
+(2) If there are **common attributes but no matching values**, naturaljoin returns an empty result.
+(3) If there are **common attributes with matching values**, naturaljoin returns matching combinations.
+
+--------------------------------------------------
+
+Boolean Predicate for NaturalJoin
+
+def bp(u, v):
+    return not any(u[k] != v[k] for k in u if k in v)
+    # or equivalently: return all(u[k] == v[k] for k in u if k in v)
+
+This predicate:
+- Returns True if u and v have no common attributes, OR all common attribute values are equal.
+- Returns False if at least one shared attribute has a different value.
+
